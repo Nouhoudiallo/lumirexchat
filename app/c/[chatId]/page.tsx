@@ -8,6 +8,7 @@ import ReactMarkdown from "react-markdown";
 import ChatInputField from "@/src/components/custom/sender-input";
 import { Loader } from "lucide-react";
 import { ClipboardCopyIcon } from "lucide-react";
+import NavBarComponent from "@/src/components/custom/navbar-component";
 
 export default function ChatPage() {
   const params = useParams();
@@ -114,6 +115,7 @@ export default function ChatPage() {
 
   return (
     <section className="flex flex-col h-screen bg-zinc-800">
+      <NavBarComponent/>
       {/* Zone de messages */}
       <div className="flex-grow flex flex-col items-center w-full p-4 overflow-y-auto scrollbar-hide scroll-container">
         <div className="flex flex-col w-full max-w-[900px] space-y-4">
