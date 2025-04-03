@@ -133,3 +133,43 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Ajoutez ce style globalement ou dans un fichier CSS lié */
+.scrollbar-hide {
+  scroll-behavior: smooth; /* Active le défilement fluide */
+}
+
+/* Ajoutez ce style dans un fichier CSS global ou dans un fichier lié */
+html {
+  scroll-behavior: smooth; /* Active le défilement fluide globalement */
+}
+
+.scroll-container {
+  scroll-behavior: smooth; /* Active le défilement fluide pour le conteneur */
+}
+
+/* Styliser la barre de défilement */
+.scroll-container::-webkit-scrollbar {
+  width: 8px; /* Largeur de la barre de défilement */
+  height: 8px; /* Hauteur de la barre de défilement horizontale */
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: var(--muted); /* Couleur de l'arrière-plan de la piste */
+  border-radius: 4px; /* Arrondi de la piste */
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: var(--accent); /* Couleur de la barre de défilement */
+  border-radius: 4px; /* Arrondi de la barre */
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-foreground); /* Couleur au survol */
+}
+
+/* Pour les navigateurs qui ne supportent pas WebKit */
+.scroll-container {
+  scrollbar-width: thin; /* Réduit la largeur de la barre (Firefox) */
+  scrollbar-color: var(--accent) var(--muted); /* Couleurs pour Firefox */
+}

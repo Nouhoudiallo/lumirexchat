@@ -57,7 +57,7 @@ const ChatInputField = ({
       >
         <div className="w-full bg-zinc-700 rounded-3xl p-2">
         <Textarea
-          className="w-full bg-transparent resize-none text-white placeholder:text-gray-400 rounded-3xl min-h-10"
+          className="w-full bg-transparent resize-none text-white placeholder:text-gray-400 rounded-3xl min-h-10 max-h-40 overflow-y-auto"
           placeholder="Posez votre question ici..."
           {...inputProps}
         />
