@@ -14,6 +14,7 @@ export async function POST(req: Request) {
         },
       },
     });
+    
     return new Response(JSON.stringify(chat), { status: 200 });
   } catch (error) {
     console.error("Erreur lors de la création du chat:", error);

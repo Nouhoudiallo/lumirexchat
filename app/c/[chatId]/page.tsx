@@ -9,20 +9,25 @@ import ChatInputField from "@/src/components/custom/sender-input";
 
 export default function ChatPage() {
   const params = useParams();
-  const chatId = params?.id as string;
+  const chatId = params?.chatId as string;
   const [messages, setMessages] = useState<{ sender: string; text: string }[]>(
     []
   );
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMessages = async () => {
+      setLoading(true);
       try {
         const req = await axios.get(`/api/chat/${chatId}`);
+        console.log("Données reçues :", req.data); // Vérifiez la structure ici
         setMessages(req.data.allChat?.[0]?.messages || []);
       } catch (error) {
+        console.error("Erreur lors de la récupération des messages :", error);
         toast.error("Impossible de charger les messages.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -43,19 +48,28 @@ export default function ChatPage() {
 
     try {
       // Envoyer le message de l'utilisateur
+      toast.info("chatId", { description: chatId });
+      console.log("chatId:", chatId);
+      
       const { data: messageResponse } = await axios.post(`/api/chat/${chatId}`, {
         sender: "user",
         text: input,
       });
+
+      console.log("Message envoyé:", messageResponse);
+      
 
       // Envoyer à n8n pour générer la réponse du bot
       const postData = await axios.post("/api/chatCompletion", {
         chatId,
         text: input,
       });
+      console.log("Réponse du bot:", postData.data);
       const botData = postData.data;
 
       if (botData.error || !botData.text) {
+        console.log("Erreur dans la réponse du bot:", botData.error);
+        
         toast.error("Erreur lors de l'envoi du message ou réponse vide.");
         setMessages((prev) => prev.slice(0, -1)); // Supprimer le placeholder du bot
         return;

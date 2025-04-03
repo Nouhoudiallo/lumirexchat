@@ -48,6 +48,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const message = await prisma.message.create({
       data: { chatId, sender, text },
     });
+    
     return NextResponse.json(message, { status: 201 });
   } catch (error) {
     console.error("Erreur dans POST /api/chat/[chatId]:", error);

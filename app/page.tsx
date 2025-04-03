@@ -25,7 +25,7 @@ export default function Page() {
     const res = await chat;
 
     if (res.status === 200) {
-      router.push(`/chat/${res.data.id}`);
+      router.push(`/c/${res.data.id}`);
     } else {
       toast.error("Erreur lors de la création de la discussion");
     }
