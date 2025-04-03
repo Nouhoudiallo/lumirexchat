@@ -1,4 +1,4 @@
-
+"use client";
 // utils/greeting.ts
 
 // Définition des types pour les moments de la journée
