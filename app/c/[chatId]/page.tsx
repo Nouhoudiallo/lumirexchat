@@ -9,6 +9,7 @@ import ChatInputField from "@/src/components/custom/sender-input";
 import { Loader } from "lucide-react";
 import { ClipboardCopyIcon } from "lucide-react";
 import NavBarComponent from "@/src/components/custom/navbar-component";
+import { useUser } from "@clerk/nextjs";
 
 export default function ChatPage() {
   const params = useParams();
@@ -18,6 +19,7 @@ export default function ChatPage() {
   );
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
+  const {user} = useUser();
 
   // Référence pour le défilement
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -74,7 +76,8 @@ export default function ChatPage() {
 
       // Envoyer à n8n pour générer la réponse du bot
       const postData = await axios.post("/api/chatCompletion", {
-        chatId,
+        userId: user?.id,
+        chatId: chatId,
         text: input,
       });
       console.log("Réponse du bot:", postData.data);
@@ -183,7 +186,7 @@ export default function ChatPage() {
           onChange: (e) => setInput(e.target.value),
           onKeyDown: (e) => e.key === "Enter" && sendMessage(),
         }}
-        buttonProps={{ onClick: sendMessage }}
+        buttonProps={{ onClick: sendMessage, disabled: loading }}
       />
     </section>
   );

@@ -46,7 +46,12 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: "Chat non trouvé" }, { status: 404 });
     }
     const message = await prisma.message.create({
-      data: { chatId, sender, text },
+      data: {
+        text,
+        sender,
+        chatId: chat.id,
+        userId: chat.userId,
+      }
     });
     
     return NextResponse.json(message, { status: 201 });

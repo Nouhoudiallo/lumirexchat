@@ -12,13 +12,27 @@ model Chat {
   title     String
   createdAt DateTime  @default(now())
   messages  Message[]
+  userId    String     // FK vers User
+  user      User       @relation(fields: [userId], references: [id])
 }
 
 model Message {
   id        String   @id @default(cuid())
   chatId    String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
   sender    String
   text      String
   createdAt DateTime @default(now())
   chat      Chat     @relation(fields: [chatId], references: [id])
+}
+
+model User {
+  id         String    @id @default(cuid())
+  clerUserId String    @unique
+  imageUrl   String?
+  name       String
+  email      String    @unique
+  chats      Chat[]    // Un utilisateur peut avoir plusieurs chats
+  messages   Message[]
 }

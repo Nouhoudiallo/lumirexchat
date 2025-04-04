@@ -1,9 +1,8 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import { NavActions } from "./nav-actions";
-import { SidebarProvider } from "../ui/sidebar";
 import { Menu } from "lucide-react";
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 
 const NavBarComponent = () => {
   return (
@@ -15,6 +14,13 @@ const NavBarComponent = () => {
             alt="User profile"
             className="h-8 w-8 rounded-full"
           />
+          <SignedOut>
+              <SignInButton />
+              <SignUpButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           <Menu/>
         </div>
       </div>
