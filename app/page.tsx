@@ -9,10 +9,10 @@ import HomePageComponent from "@/src/components/custom/wrapper";
 import { useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 
-export default async function Page() {
+export default function Page() {
   const message = getGreeting();
   const router = useRouter();
-  const { user } = await useUser();
+  const { user } =  useUser();
 
   const handleClick = async () => {
     if (user && user.id) {
