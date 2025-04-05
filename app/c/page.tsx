@@ -8,12 +8,13 @@ import { Button } from "@/src/components/ui/button";
 import NavBarComponent from "@/src/components/custom/navbar-component";
 import { deleteChat, getUser, userChat } from "@/src/actions/user";
 import { toast } from "sonner";
-import { redirect} from "next/navigation";
+import { redirect, useRouter} from "next/navigation";
 import { getCookieValue } from "@/src/actions/cookie";
 
 export default function ChatHistoriePage() {
   const [chats, setChats] = React.useState<Chat[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const router = useRouter()
   
       
   React.useEffect(() => {
@@ -119,7 +120,8 @@ export default function ChatHistoriePage() {
                       className="text-red-500 hover:bg-red-500 hover:text-white"
                       onClick={() => {
                         deleteChat(chat.id, "/c");
-                        window.location.reload();
+                        router.refresh();
+                        toast.success("Le chat a été supprimé avec succès");
                       }}
                     >
                       <Trash2 />
