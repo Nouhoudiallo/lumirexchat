@@ -14,7 +14,6 @@ export async function POST(req: Request) {
     });
 
     if (existingUser) {
-      console.log("User already exists:", existingUser);
 
       return NextResponse.json(
         {

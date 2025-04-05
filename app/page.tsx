@@ -8,6 +8,7 @@ import axios from "axios";
 import HomePageComponent from "@/src/components/custom/wrapper";
 import { useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
+import { createUser } from "@/src/actions/user";
 
 export default function Page() {
   const message = getGreeting();
@@ -27,6 +28,8 @@ export default function Page() {
         userId: user?.id,
       });
 
+      
+
       const res = await chat;
 
       if (res.status === 200) {
@@ -40,34 +43,23 @@ export default function Page() {
 
   useEffect(() => {
     const insertUser = async () => {
-      if (user && user.id) {
-        console.log("Données utilisateur envoyées :", {
-          userId: user.id,
-          imageUrl: user.imageUrl,
-          name: user.fullName,
-          email: user.emailAddresses[0].emailAddress,
-        });
 
-        const res = await axios.post("/api/user", {
-          userId: user.id,
-          imageUrl: user.imageUrl,
-          name: user.fullName,
-          email: user.emailAddresses[0].emailAddress,
-        });
+      if (user) {
+        const userInfo = await createUser(
+          user.id,
+          user.imageUrl,
+          user.fullName || "",
+          user.emailAddresses[0].emailAddress
+        );
 
-        if (res.status === 200) {
-          toast.success("Utilisateur inséré avec succès");
+        if(userInfo.message === "Utilisateur inséré avec succès") {
+          toast.success(userInfo.message);
         }
-        if (res.status === 400) {
-          toast.error("L'utilisateur existe déjà");
-        }
-        if (res.status === 500) {
-          toast.error(
-            "Une erreur est survenue lors de l'insertion de l'utilisateur"
-          );
-        }
+      } else {
+        toast.error("Certaines informations utilisateur sont manquantes");
       }
     };
+   
     insertUser();
   }, [user]);
 

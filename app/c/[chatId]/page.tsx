@@ -35,7 +35,6 @@ export default function ChatPage() {
       setLoading(true);
       try {
         const req = await axios.get(`/api/chat/${chatId}`);
-        console.log("Données reçues :", req.data); // Vérifiez la structure ici
         setMessages(req.data.allChat?.[0]?.messages || []);
       } catch (error) {
         console.error("Erreur lors de la récupération des messages :", error);
@@ -80,7 +79,6 @@ export default function ChatPage() {
         chatId: chatId,
         text: input,
       });
-      console.log("Réponse du bot:", postData.data);
       const botData = postData.data;
 
       if (botData.error || !botData.text) {

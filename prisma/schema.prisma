@@ -11,7 +11,7 @@ model Chat {
   id        String    @id @default(cuid())
   title     String
   createdAt DateTime  @default(now())
-  messages  Message[]
+  messages  Message[] // Relation avec la table Message
   userId    String     // FK vers User
   user      User       @relation(fields: [userId], references: [id])
 }
@@ -24,7 +24,7 @@ model Message {
   sender    String
   text      String
   createdAt DateTime @default(now())
-  chat      Chat     @relation(fields: [chatId], references: [id])
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
 }
 
 model User {
