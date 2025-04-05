@@ -10,6 +10,7 @@ import { Loader } from "lucide-react";
 import { ClipboardCopyIcon } from "lucide-react";
 import NavBarComponent from "@/src/components/custom/navbar-component";
 import { useUser } from "@clerk/nextjs";
+import { ChatCompletion, SaveUserMessage } from "@/src/actions/completion";
 
 export default function ChatPage() {
   const params = useParams();
@@ -65,32 +66,49 @@ export default function ChatPage() {
     scrollToBottom(); // Défilement après l'ajout des messages temporaires
 
     try {
-      const { data: messageResponse } = await axios.post(
-        `/api/chat/${chatId}`,
-        {
-          sender: "user",
-          text: input,
-        }
+
+      // { data: messageResponse } = await axios.post(
+      //   `/api/chat/${chatId}`,
+      //   {
+      //     sender: "user",
+      //     text: input,
+      //   }
+      // );
+
+      const messageResponse = await SaveUserMessage(
+        input,
+        chatId,
+        user?.id as string
       );
-
-      // Envoyer à n8n pour générer la réponse du bot
-      const postData = await axios.post("/api/chatCompletion", {
-        userId: user?.id,
-        chatId: chatId,
-        text: input,
-      });
-      const botData = postData.data;
-
-      if (botData.error || !botData.text) {
-        console.log("Erreur dans la réponse du bot:", botData.error);
-
+      if (messageResponse.error) {
+        console.log("Erreur dans la réponse du bot:", messageResponse.error);
         toast.error("Erreur lors de l'envoi du message ou réponse vide.");
         setMessages((prev) => prev.slice(0, -1)); // Supprimer le placeholder du bot
+        // supprimer le message de l'utilisateur
+        setMessages((prev) => prev.slice(0, -1)); // Supprimer le message de l'utilisateur
         return;
       }
 
+      // Envoyer à n8n pour générer la réponse du bot
+      // axios.post("/api/chatCompletion", {
+      //   userId: user?.id,
+      //   chatId: chatId,
+      //   text: input,
+      // });
+      const postData = await ChatCompletion(input,chatId, user?.id as string);
+      // Vérifier si la réponse contient une erreur
+      if (postData.error) {
+        console.log("Erreur dans la réponse du bot:", postData.error);
+        toast.error("Erreur lors de l'envoi du message ou réponse vide.");
+        setMessages((prev) => prev.slice(0, -1)); // Supprimer le placeholder du bot
+        // supprimer le message de l'utilisateur
+        setMessages((prev) => prev.slice(0, -1)); // Supprimer le message de l'utilisateur
+        return;
+      }
+      const botData = postData.text || "Réponse indisponible.";
+
       // Remplacer le placeholder par la réponse réelle du bot
-      const botMessage = { sender: "bot", text: botData.text };
+      const botMessage = { sender: "assistant", text: botData };
       setMessages((prev) => [...prev.slice(0, -1), botMessage]);
       scrollToBottom(); // Défilement après la réponse du bot
     } catch (error) {

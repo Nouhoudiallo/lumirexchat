@@ -121,6 +121,7 @@ export default function ChatHistoriePage() {
                       onClick={() => {
                         deleteChat(chat.id, "/c");
                         router.refresh();
+                        router.push("/c");
                         toast.success("Le chat a été supprimé avec succès");
                       }}
                     >
