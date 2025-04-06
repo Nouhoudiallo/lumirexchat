@@ -118,11 +118,17 @@ export default function ChatHistoriePage() {
                     <Button
                       variant="ghost"
                       className="text-red-500 hover:bg-red-500 hover:text-white"
-                      onClick={() => {
-                        deleteChat(chat.id, "/c");
-                        router.refresh();
-                        router.push("/c");
+                      onClick={async () => {
+                      try {
+                        await deleteChat(chat.id, "/c");
+                        setChats((prevChats) =>
+                        prevChats.filter((c) => c.id !== chat.id)
+                        );
                         toast.success("Le chat a été supprimé avec succès");
+                      } catch (error) {
+                        console.error("Erreur lors de la suppression du chat:", error);
+                        toast.error("Erreur lors de la suppression du chat");
+                      }
                       }}
                     >
                       <Trash2 />

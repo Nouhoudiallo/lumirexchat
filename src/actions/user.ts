@@ -2,6 +2,7 @@
 import { cookies } from "next/headers"
 import prisma from "../lib/prisma"
 import { revalidatePath } from "next/cache"
+import { stat } from "fs"
 
 export const getUser = async (userId: string) => {
   const replace = userId.replace(/"/g, "")
@@ -110,3 +111,42 @@ export const deleteChat = async (chatId: string, path?: string) => {
     chat: chat,
   };
 };
+
+export const GetMessages = async (chatId: string) => {
+  if(!chatId) return {
+    message: "Le chatId est manquant",
+    status: 400,
+  }
+
+  try {
+    
+    const chat = await prisma.chat.findUnique({
+      where: { id: chatId },
+      include: {
+        messages: {
+          orderBy: { createdAt: "asc" },
+        },
+      },
+    });
+
+    if (!chat) {
+      return {
+        message: "Chat non trouvé",
+        status: 404,
+      }
+    }
+    return {
+      message: "Les messages du chat",
+      allChat: [chat],
+      status: 200,
+    }
+
+  } catch (error:any) {
+    console.log("Erreur lors de la récupération des messages :", error.message);
+    
+    return {
+      message: "Erreur lors de la récupération des messages",
+      status: 500,
+    }
+  }
+}

@@ -20,13 +20,13 @@ export const ChatCompletion = async (text: string, chatId: string, userId: strin
     }
     // 2. Envoyer à n8n pour générer la réponse du bot
     const { data: botData } = await axios.post(
-      "https://n8n-doc.onrender.com/webhook/lumichat",
+      "https://n8n-doc.onrender.com/webhook/lumirexai",
       {
         chatId,
         text,
       }
     );
-
+    
     const { error, output: botText } = botData;
     if (error) {
       return {
@@ -43,6 +43,7 @@ export const ChatCompletion = async (text: string, chatId: string, userId: strin
         userId: user.id, // id réel ici
       },
     });
+    
 
     return {
       text: saveMessage.text,
@@ -59,6 +60,7 @@ export const ChatCompletion = async (text: string, chatId: string, userId: strin
 }
 
 export const SaveUserMessage = async (text: string, chatId: string, sender: string) => {
+  
   if(!chatId){
     return {
       error: "chatId manquant",
@@ -88,7 +90,7 @@ export const SaveUserMessage = async (text: string, chatId: string, sender: stri
     const message = await prisma.message.create({
       data: {
         text,
-        sender,
+        sender: sender,
         chatId: chat.id,
         userId: chat.userId,
       }

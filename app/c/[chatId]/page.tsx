@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { toast } from "sonner";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
@@ -11,6 +11,7 @@ import { ClipboardCopyIcon } from "lucide-react";
 import NavBarComponent from "@/src/components/custom/navbar-component";
 import { useUser } from "@clerk/nextjs";
 import { ChatCompletion, SaveUserMessage } from "@/src/actions/completion";
+import { GetMessages } from "@/src/actions/user";
 
 export default function ChatPage() {
   const params = useParams();
@@ -35,8 +36,9 @@ export default function ChatPage() {
     const fetchMessages = async () => {
       setLoading(true);
       try {
-        const req = await axios.get(`/api/chat/${chatId}`);
-        setMessages(req.data.allChat?.[0]?.messages || []);
+        const req = await GetMessages(chatId);
+        
+        setMessages(req.allChat?.[0]?.messages || []);
       } catch (error) {
         console.error("Erreur lors de la récupération des messages :", error);
         toast.error("Impossible de charger les messages.");
@@ -46,7 +48,8 @@ export default function ChatPage() {
       }
     };
 
-    if (chatId) fetchMessages();
+    if (!chatId) redirect("/");
+    fetchMessages();
   }, [chatId]);
 
   const sendMessage = async () => {
@@ -78,7 +81,7 @@ export default function ChatPage() {
       const messageResponse = await SaveUserMessage(
         input,
         chatId,
-        user?.id as string
+        "user"
       );
       if (messageResponse.error) {
         console.log("Erreur dans la réponse du bot:", messageResponse.error);
