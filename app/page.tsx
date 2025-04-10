@@ -9,6 +9,7 @@ import HomePageComponent from "@/src/components/custom/wrapper";
 import { useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { createUser } from "@/src/actions/user";
+import Wrapper from "@/src/components/custom/wrapper";
 
 export default function Page() {
   const message = getGreeting();
@@ -64,13 +65,13 @@ export default function Page() {
   }, [user]);
 
   return (
-    <HomePageComponent>
+    <Wrapper>
       <div className="flex flex-col h-full w-full justify-center items-center gap-4">
         <h2 className="text-2xl md:text-3xl text-center">{message}</h2>
         <Button size={"lg"} className="cursor-pointer" onClick={handleClick}>
           Lancer une Discussion
         </Button>
       </div>
-    </HomePageComponent>
+    </Wrapper>
   );
 }

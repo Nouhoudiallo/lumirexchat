@@ -136,8 +136,7 @@ export default function ChatPage() {
   }, [messages]);
 
   return (
-    <section className="flex flex-col h-screen bg-zinc-800">
-      <NavBarComponent/>
+    <section className="flex flex-col h-screen ">
       {/* Zone de messages */}
       <div className="flex-grow flex flex-col items-center w-full p-4 overflow-y-auto scrollbar-hide scroll-container">
         <div className="flex flex-col w-full max-w-[900px] space-y-4">

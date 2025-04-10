@@ -83,8 +83,7 @@ export default function ChatHistoriePage() {
   }, {} as Record<string, Chat[]>);
 
   return (
-    <div className="w-full mx-auto p-6 rounded-lg shadow-lg">
-      <NavBarComponent />
+    <div className="w-full h-full mx-auto p-6 rounded-lg shadow-lg">
       <h1 className="text-3xl font-bold text-white mb-6">
         📜 Historique des Chats
       </h1>

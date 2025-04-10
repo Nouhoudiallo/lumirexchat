@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from 'sonner';
+import { Toaster } from "sonner";
 import { ClerkProvider } from "@clerk/nextjs";
+import { ThemeProvider } from "@/src/components/custom/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,18 +25,23 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
-  
   return (
     <ClerkProvider>
-    <html lang="fr" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased scroll-container`}
-      >
-        {children}
-        <Toaster closeButton richColors />
-      </body>
-    </html>
+      <html lang="fr" suppressHydrationWarning>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased scroll-container`}
+        >
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+          <Toaster closeButton richColors />
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
