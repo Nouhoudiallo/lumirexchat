@@ -1,5 +1,6 @@
+"use client"
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Sheet,
   SheetClose,
@@ -12,6 +13,17 @@ import {
 } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { HomeIcon, LucideIcon, MenuIcon } from "lucide-react";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
+import { createUser } from "@/src/actions/user";
+import { toast } from "sonner";
+import { UserInfos } from "@/src/utils/user-info";
 
 type MenuItem = {
   label: string;
@@ -25,6 +37,30 @@ const MENU_ITEMS = [
     icon: HomeIcon,
   },
 ];
+
+const { user } = UserInfos;
+
+useEffect(() => {
+  const insertUser = async () => {
+
+    if (user) {
+      const userInfo = await createUser(
+        user.id,
+        user.imageUrl,
+        user.fullName || "",
+        user.emailAddresses[0].emailAddress
+      );
+
+      if(userInfo.message === "Utilisateur inséré avec succès") {
+        toast.success(userInfo.message);
+      }
+    } else {
+      toast.error("Certaines informations utilisateur sont manquantes");
+    }
+  };
+ 
+  insertUser();
+}, [user]);
 
 export default function Wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -50,6 +86,13 @@ export default function Wrapper({ children }: { children: React.ReactNode }) {
                     </Link>
                   );
                 })}
+                <SignedOut>
+                  <SignInButton />
+                  <SignUpButton />
+                </SignedOut>
+                <SignedIn>
+                  <UserButton />
+                </SignedIn>
               </ul>
               <div className="md:hidden">
                 <Sheet>
